@@ -28,18 +28,59 @@ let equalBtn = document.querySelector(".evaluate");
 let numDigits = 0;
 
 allClearBtn.addEventListener("click", () => {
-  numDigits = 0;
-  decimalBtn.value = "true";
-  displayNumber.innerHTML = "0.";
-  indexCount = 0;
+  resetCalculator();
 });
 
 deleteBtn.addEventListener("click", () => {
-  displayNumber.innerHTML = displayNumber.innerHTML.slice(
-    0,
-    displayNumber.innerHTML.length - 1
-  );
-  numDigits--;
+  if (
+    decimalBtn.value === "true" &&
+    !(
+      displayNumber.innerHTML.slice(
+        displayNumber.innerHTML.length - 1,
+        displayNumber.innerHTML.length
+      ) === "."
+    )
+  ) {
+    displayNumber.innerHTML =
+      displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length - 2) +
+      ".";
+  }
+
+  if (
+    decimalBtn.value === "true" &&
+    displayNumber.innerHTML.slice(
+      displayNumber.innerHTML.length - 1,
+      displayNumber.innerHTML.length
+    ) === "."
+  ) {
+    displayNumber.innerHTML =
+      displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length - 2) +
+      ".";
+  }
+
+  if (decimalBtn.value === "false") {
+    if (
+      displayNumber.innerHTML.slice(
+        displayNumber.innerHTML.length - 1,
+        displayNumber.innerHTML.length
+      ) === "."
+    ) {
+      decimalBtn.value = "true";
+    } else {
+      displayNumber.innerHTML = displayNumber.innerHTML.slice(
+        0,
+        displayNumber.innerHTML.length - 1
+      );
+    }
+  }
+
+  if (displayNumber.innerHTML.length === 1) {
+    displayNumber.innerHTML = "0.";
+    decimalBtn.value === "true";
+  }
+  if (numDigits > 0) {
+    numDigits--;
+  }
 });
 
 plusMinusBtn.addEventListener("click", () => {
@@ -59,9 +100,49 @@ plusMinusBtn.addEventListener("click", () => {
 });
 
 percentBtn.addEventListener("click", () => {
-  displayNumber.innerHTML =
-    "0.0" + displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length);
-  numDigits++;
+  if (
+    displayNumber.innerHTML.slice(
+      displayNumber.innerHTML.length - 1,
+      displayNumber.innerHTML.length
+    ) != "."
+  ) {
+    displayNumber.innerHTML =
+      "" +
+      parseFloat(
+        displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length)
+      ) /
+        100;
+
+    numDigits++;
+    decimalBtn.value = "false";
+  }
+  if (
+    displayNumber.innerHTML.slice(
+      displayNumber.innerHTML.length - 1,
+      displayNumber.innerHTML.length
+    ) === "." &&
+    displayNumber.innerHTML != "0." &&
+    displayNumber.innerHTML != "0"
+  ) {
+    displayNumber.innerHTML =
+      "" +
+      parseFloat(
+        displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length - 1)
+      ) /
+        100;
+
+    numDigits++;
+    decimalBtn.value = "false";
+  }
+  if (displayNumber.innerHTML.length > 14) {
+    displayNumber.innerHTML = parseFloat(displayNumber.innerHTML).toFixed(12);
+  }
+  if (displayNumber.innerHTML === "0.000000000000") {
+    displayNumber.innerHTML = "NUMBER 2 BIG";
+    setTimeout(function () {
+      resetCalculator();
+    }, 500);
+  }
 });
 
 numberBtns.forEach((numberBtns) => {
@@ -89,6 +170,9 @@ numberBtns.forEach((numberBtns) => {
 });
 
 String.prototype.replaceAt = function (index, replacement) {
+  if (decimalBtn.value === "false") {
+    return displayNumber.innerHTML.slice(index, numDigits) + replacement;
+  }
   if (displayNumber.innerHTML.slice(index, 1) === "0") {
     return replacement + ".";
   }
@@ -97,6 +181,13 @@ String.prototype.replaceAt = function (index, replacement) {
   }
   return displayNumber.innerHTML.slice(index, numDigits) + replacement;
 };
+
+function resetCalculator() {
+  numDigits = 0;
+  decimalBtn.value = "true";
+  displayNumber.innerHTML = "0.";
+  indexCount = 0;
+}
 
 function add(num1, num2) {
   return num1 + num2;
