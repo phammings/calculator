@@ -20,15 +20,62 @@ let deleteBtn = document.querySelector("#delete");
 let plusMinusBtn = document.querySelector("#plus-minus");
 let percentBtn = document.querySelector("#percent");
 
-let operatorBtns = document.querySelector(".operators");
+let operatorBtns = document.querySelectorAll(".operators");
 
 let decimalBtn = document.querySelector(".decimal");
 let equalBtn = document.querySelector(".evaluate");
 
 let numDigits = 0;
+let operator = "";
+let operand = "0";
+let result = "0";
+let isOperating = false;
+
+operatorBtns.forEach((operatorBtn) => {
+  operatorBtn.addEventListener("click", () => {
+    if (displayNumber.innerHTML === "0.") {
+      displayError();
+    } else {
+      calculate();
+      operator = operatorBtn.innerHTML;
+    }
+  });
+});
+
+equalBtn.addEventListener("click", () => {
+  if (operator === "") {
+    displayError();
+  } else {
+    calculate();
+    operator = "";
+  }
+});
+
+function calculate() {
+  if (operator === "") {
+    operand = displayNumber.innerHTML;
+  } else {
+    result =
+      "" +
+      operate(
+        operator,
+        parseFloat(operand),
+        parseFloat(displayNumber.innerHTML)
+      );
+    operand = result;
+    displayNumber.innerHTML = result;
+    if (result % 1 === 0) {
+      displayNumber.innerHTML += ".";
+    }
+  }
+  isOperating = true;
+}
 
 allClearBtn.addEventListener("click", () => {
   resetCalculator();
+  operand = "0";
+  result = "0";
+  operator = "";
 });
 
 deleteBtn.addEventListener("click", () => {
@@ -147,10 +194,15 @@ percentBtn.addEventListener("click", () => {
 
 numberBtns.forEach((numberBtns) => {
   numberBtns.addEventListener("click", () => {
+    if (isOperating) {
+      resetCalculator();
+      displayNumber.innerHTML = numberBtns.innerHTML + ".";
+      isOperating = false;
+    }
     if (displayNumber.innerHTML === "0") {
       displayNumber.innerHTML = "";
     }
-    if (numDigits < 13) {
+    if (numDigits < 13 && !isOperating) {
       displayNumber.innerHTML = displayNumber.innerHTML.replaceAt(
         0,
         numberBtns.innerHTML
@@ -168,6 +220,13 @@ numberBtns.forEach((numberBtns) => {
     }
   });
 });
+
+function displayError() {
+  displayNumber.innerHTML = "ERROR";
+  setTimeout(function () {
+    resetCalculator();
+  }, 500);
+}
 
 String.prototype.replaceAt = function (index, replacement) {
   if (decimalBtn.value === "false") {
@@ -207,15 +266,18 @@ function divide(num1, num2) {
 
 function operate(operator, num1, num2) {
   switch (operator) {
-    case add:
+    case "+":
       return add(num1, num2);
-    case subtract:
+    case "-":
       return subtract(num1, num2);
-    case multiply:
+    case "*":
       return multiply(num1, num2);
-    case divide:
+    case "/":
       return divide(num1, num2);
     default:
       break;
   }
 }
+
+//fix operator - 5*n should now be 0
+//5+6-2 will do 5-6
