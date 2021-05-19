@@ -10,6 +10,7 @@
   --body-bg: #f0ffff;
   --box-shadow: 10px 10px 48px #97a1a1, -10px -10px 48px #ffffff;
   --label-text: #111;
+  --opacity-level: 0.2;
 }
 
 [data-theme="dark"] {
@@ -37,6 +38,20 @@ body {
   width: 336px;
   border-radius: 10px;
   box-shadow: var(--box-shadow);
+}
+
+#operator-icons {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 10em;
+}
+
+#plus,
+#minus,
+#times,
+#divide {
+  transition: 0.2s;
+  opacity: var(--opacity-level);
 }
 
 header {
@@ -74,17 +89,17 @@ header #current {
   background-color: var(--operators-bg-hover);
 }
 
-#keys .numbers {
+#keys .numbers,
+#keys .evaluate,
+#keys .decimal {
   margin-top: 2px;
 }
 
-#keys #all-clear {
-  width: 50%;
-  margin-top: 2px;
-}
-
-#keys #clear {
-  width: 50%;
+#keys #all-clear,
+#keys #delete,
+#keys #plus-minus,
+#keys #percent {
+  width: 25%;
   margin-top: 2px;
 }
 

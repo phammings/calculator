@@ -25,6 +25,11 @@ let operatorBtns = document.querySelectorAll(".operators");
 let decimalBtn = document.querySelector(".decimal");
 let equalBtn = document.querySelector(".evaluate");
 
+let minusIcon = document.querySelector("#minus");
+let plusIcon = document.querySelector("#plus");
+let divideIcon = document.querySelector("#divide");
+let timesIcon = document.querySelector("#times");
+
 let numDigits = 0;
 let operator = "";
 let operand = "0";
@@ -32,15 +37,44 @@ let result = "0";
 let isOperating = false;
 let canChangeOperator = false;
 
+function resetIcons() {
+  plusIcon.style.setProperty("--opacity-level", 0.2);
+  minusIcon.style.setProperty("--opacity-level", 0.2);
+  timesIcon.style.setProperty("--opacity-level", 0.2);
+  divideIcon.style.setProperty("--opacity-level", 0.2);
+}
+
+function lightUpIcon(operator) {
+  resetIcons();
+  switch (operator) {
+    case "+":
+      plusIcon.style.setProperty("--opacity-level", 0.8);
+      break;
+    case "-":
+      minusIcon.style.setProperty("--opacity-level", 0.8);
+      break;
+    case "*":
+      timesIcon.style.setProperty("--opacity-level", 0.8);
+      break;
+    case "/":
+      divideIcon.style.setProperty("--opacity-level", 0.8);
+      break;
+    default:
+      break;
+  }
+}
+
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
     if (displayNumber.innerHTML === "0.") {
       displayError();
     } else if (canChangeOperator) {
       operator = operatorBtn.innerHTML;
+      lightUpIcon(operator);
     } else {
       calculate();
       operator = operatorBtn.innerHTML;
+      lightUpIcon(operator);
       canChangeOperator = true;
     }
   });
@@ -52,6 +86,7 @@ equalBtn.addEventListener("click", () => {
   } else {
     calculate();
     operator = "";
+    resetIcons();
   }
 });
 
@@ -77,6 +112,7 @@ function calculate() {
 
 allClearBtn.addEventListener("click", () => {
   resetCalculator();
+  resetIcons();
   operand = "0";
   result = "0";
   operator = "";
@@ -285,6 +321,5 @@ function operate(operator, num1, num2) {
   }
 }
 
-//allow to change operators after 1 is clicked
 //round long decimals
 //add icon when each operator is clicked

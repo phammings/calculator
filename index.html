@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script
+      src="https://kit.fontawesome.com/399f43e77d.js"
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
     <title>Calculator</title>
     <meta charset="UTF-8" />
@@ -41,15 +45,22 @@
 
       <div id="calculator">
         <header>
-          <label id="previous"></label>
+          <div id="operator-icons">
+            <i id="divide" class="fas fa-divide"></i>
+            <i id="times" class="fas fa-times"></i>
+            <i id="plus" class="fas fa-plus"></i>
+            <i id="minus" class="fas fa-minus"></i>
+          </div>
           <div id="current">
-            <div id="current-value">0</div>
+            <div id="current-value">0.</div>
           </div>
         </header>
 
         <div id="keys">
           <button id="all-clear">AC</button>
-          <button id="clear">C</button>
+          <button id="delete">DEL</button>
+          <button id="plus-minus" value="true">+/-</button>
+          <button id="percent">%</button>
 
           <button class="numbers">1</button>
           <button class="numbers">2</button>
@@ -67,8 +78,8 @@
           <button class="operators">+</button>
 
           <button class="numbers">0</button>
-          <button class="numbers">.</button>
-          <button class="numbers">=</button>
+          <button class="decimal" value="true">.</button>
+          <button class="evaluate">=</button>
           <button class="operators">-</button>
         </div>
       </div>
