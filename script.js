@@ -30,14 +30,18 @@ let operator = "";
 let operand = "0";
 let result = "0";
 let isOperating = false;
+let canChangeOperator = false;
 
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
     if (displayNumber.innerHTML === "0.") {
       displayError();
+    } else if (canChangeOperator) {
+      operator = operatorBtn.innerHTML;
     } else {
       calculate();
       operator = operatorBtn.innerHTML;
+      canChangeOperator = true;
     }
   });
 });
@@ -199,6 +203,7 @@ numberBtns.forEach((numberBtns) => {
       displayNumber.innerHTML = numberBtns.innerHTML + ".";
       isOperating = false;
       plusMinusBtn.value = "true";
+      canChangeOperator = false;
     }
     if (displayNumber.innerHTML === "0") {
       displayNumber.innerHTML = "";
@@ -280,5 +285,6 @@ function operate(operator, num1, num2) {
   }
 }
 
-//fix operator - 5*n should now be 0
-//5+6-2 will do 5-6
+//allow to change operators after 1 is clicked
+//round long decimals
+//add icon when each operator is clicked
