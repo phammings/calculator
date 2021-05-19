@@ -198,6 +198,7 @@ numberBtns.forEach((numberBtns) => {
       resetCalculator();
       displayNumber.innerHTML = numberBtns.innerHTML + ".";
       isOperating = false;
+      plusMinusBtn.value = "true";
     }
     if (displayNumber.innerHTML === "0") {
       displayNumber.innerHTML = "";
