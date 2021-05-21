@@ -96,10 +96,12 @@ function calculate() {
   } else {
     result =
       "" +
-      operate(
-        operator,
-        parseFloat(operand),
-        parseFloat(displayNumber.innerHTML)
+      roundResult(
+        operate(
+          operator,
+          parseFloat(operand),
+          parseFloat(displayNumber.innerHTML)
+        )
       );
     operand = result;
     displayNumber.innerHTML = result;
@@ -108,6 +110,10 @@ function calculate() {
     }
   }
   isOperating = true;
+}
+
+function roundResult(number) {
+  return Math.round(number * 1000) / 1000;
 }
 
 allClearBtn.addEventListener("click", () => {
@@ -320,6 +326,3 @@ function operate(operator, num1, num2) {
       break;
   }
 }
-
-//round long decimals
-//add icon when each operator is clicked

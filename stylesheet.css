@@ -41,9 +41,11 @@ body {
 }
 
 #operator-icons {
+  padding-left: 1em;
   display: flex;
   justify-content: space-between;
   margin-right: 10em;
+  color: var(--header-color);
 }
 
 #plus,
@@ -54,14 +56,20 @@ body {
   opacity: var(--opacity-level);
 }
 
-header {
-  padding: 20px;
+#header-container {
   background: var(--header-bg);
   color: var(--header-color);
+}
+
+header {
+  padding: 20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   text-align: right;
   height: 80px;
+  display: inline;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 header #detail {
