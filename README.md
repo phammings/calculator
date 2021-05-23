@@ -33,3 +33,7 @@
 **%** displays number as percentage (divide by 100)
 
 **Enter Button** or **=** will evaluate the expression and display the result, otherwise will result in ERROR.
+
+## Switching to darkmode
+
+Toggle the switch on top of the calculator will switch themes.
