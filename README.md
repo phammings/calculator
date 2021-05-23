@@ -36,4 +36,4 @@
 
 ## Switching to darkmode
 
-Toggle the switch on top of the calculator will switch themes.
+Toggling the switch on top of the calculator will switch themes.
