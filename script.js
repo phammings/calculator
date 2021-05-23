@@ -1,17 +1,3 @@
-document.addEventListener("DOMContentLoaded", (event) => {
-  document.documentElement.setAttribute("data-theme", "light");
-
-  let themeSwitcher = document.getElementById("theme-switcher");
-  themeSwitcher.checked = true;
-
-  themeSwitcher.onclick = () => {
-    let currentTheme = document.documentElement.getAttribute("data-theme");
-    let switchToTheme = currentTheme === "light" ? "dark" : "light";
-
-    document.documentElement.setAttribute("data-theme", switchToTheme);
-  };
-});
-
 let displayNumber = document.querySelector("#current-value");
 let numberBtns = document.querySelectorAll(".numbers");
 
@@ -39,6 +25,67 @@ let canChangeOperator = false;
 
 const keys = document.querySelectorAll(".key");
 window.addEventListener("keydown", setInput);
+
+//Switch theme to dark/light mode
+document.addEventListener("DOMContentLoaded", (event) => {
+  document.documentElement.setAttribute("data-theme", "light");
+
+  let themeSwitcher = document.getElementById("theme-switcher");
+  themeSwitcher.checked = true;
+
+  themeSwitcher.onclick = () => {
+    let currentTheme = document.documentElement.getAttribute("data-theme");
+    let switchToTheme = currentTheme === "light" ? "dark" : "light";
+
+    document.documentElement.setAttribute("data-theme", switchToTheme);
+  };
+});
+
+operatorBtns.forEach((operatorBtn) => {
+  operatorBtn.addEventListener("click", () => {
+    if (displayNumber.innerHTML === "0.") {
+      displayError();
+    } else if (canChangeOperator) {
+      operator = operatorBtn.innerHTML;
+      lightUpIcon(operator);
+    } else {
+      calculate();
+      operator = operatorBtn.innerHTML;
+      lightUpIcon(operator);
+      canChangeOperator = true;
+    }
+  });
+});
+
+equalBtn.addEventListener("click", evaluateKey);
+allClearBtn.addEventListener("click", allClear);
+deleteBtn.addEventListener("click", deleteNumber);
+plusMinusBtn.addEventListener("click", plusMinus);
+percentBtn.addEventListener("click", percent);
+
+numberBtns.forEach((numberBtns) => {
+  numberBtns.addEventListener("click", () => {
+    if (isOperating) {
+      resetCalculator();
+      displayNumber.innerHTML = numberBtns.innerHTML + ".";
+      isOperating = false;
+      plusMinusBtn.value = "true";
+      canChangeOperator = false;
+    }
+    if (displayNumber.innerHTML === "0") {
+      displayNumber.innerHTML = "";
+    }
+    if (numDigits < 13 && !isOperating) {
+      displayNumber.innerHTML = displayNumber.innerHTML.replaceAt(
+        0,
+        numberBtns.innerHTML
+      );
+      numDigits++;
+    }
+  });
+
+  decimalBtn.addEventListener("click", appendDecimal);
+});
 
 function setInput(e) {
   if (e.key === "%") percent();
@@ -93,22 +140,6 @@ function operateKey(operatorKey) {
   }
 }
 
-operatorBtns.forEach((operatorBtn) => {
-  operatorBtn.addEventListener("click", () => {
-    if (displayNumber.innerHTML === "0.") {
-      displayError();
-    } else if (canChangeOperator) {
-      operator = operatorBtn.innerHTML;
-      lightUpIcon(operator);
-    } else {
-      calculate();
-      operator = operatorBtn.innerHTML;
-      lightUpIcon(operator);
-      canChangeOperator = true;
-    }
-  });
-});
-
 function evaluateKey() {
   if (operator === "") {
     displayError();
@@ -118,10 +149,6 @@ function evaluateKey() {
     resetIcons();
   }
 }
-
-equalBtn.addEventListener("click", () => {
-  evaluateKey();
-});
 
 function calculate() {
   if (operator === "") {
@@ -137,7 +164,6 @@ function calculate() {
         )
       );
     operand = result;
-    debugger;
     displayNumber.innerHTML = result;
     if (result % 1 === 0) {
       displayNumber.innerHTML += ".";
@@ -157,8 +183,6 @@ function allClear() {
   result = "0";
   operator = "";
 }
-
-allClearBtn.addEventListener("click", allClear);
 
 function deleteNumber() {
   if (
@@ -212,8 +236,6 @@ function deleteNumber() {
   }
 }
 
-deleteBtn.addEventListener("click", deleteNumber);
-
 function plusMinus() {
   if (plusMinusBtn.value === "true") {
     displayNumber.innerHTML =
@@ -229,8 +251,6 @@ function plusMinus() {
     plusMinusBtn.value = "true";
   }
 }
-
-plusMinusBtn.addEventListener("click", plusMinus);
 
 function percent() {
   if (
@@ -278,8 +298,6 @@ function percent() {
   }
 }
 
-percentBtn.addEventListener("click", percent);
-
 function appendNumber(number) {
   if (isOperating) {
     resetCalculator();
@@ -306,32 +324,6 @@ function appendDecimal() {
     }
   }
 }
-
-numberBtns.forEach((numberBtns) => {
-  numberBtns.addEventListener("click", () => {
-    if (isOperating) {
-      resetCalculator();
-      displayNumber.innerHTML = numberBtns.innerHTML + ".";
-      isOperating = false;
-      plusMinusBtn.value = "true";
-      canChangeOperator = false;
-    }
-    if (displayNumber.innerHTML === "0") {
-      displayNumber.innerHTML = "";
-    }
-    if (numDigits < 13 && !isOperating) {
-      displayNumber.innerHTML = displayNumber.innerHTML.replaceAt(
-        0,
-        numberBtns.innerHTML
-      );
-      numDigits++;
-    }
-  });
-
-  decimalBtn.addEventListener("click", () => {
-    appendDecimal();
-  });
-});
 
 function displayError() {
   displayNumber.innerHTML = "ERROR";
