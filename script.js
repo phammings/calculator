@@ -261,10 +261,12 @@ function percent() {
   ) {
     displayNumber.innerHTML =
       "" +
-      parseFloat(
+      ((parseFloat(
         displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length)
       ) /
-        100;
+        100) *
+        1000) /
+        1000;
 
     numDigits++;
     decimalBtn.value = "false";
