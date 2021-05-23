@@ -37,6 +37,21 @@ let result = "0";
 let isOperating = false;
 let canChangeOperator = false;
 
+const keys = document.querySelectorAll(".key");
+window.addEventListener("keydown", setInput);
+
+function setInput(e) {
+  if (e.key === "%") percent();
+  if (e.key === ";") plusMinus();
+  if (e.key === ".") appendDecimal();
+  if (e.key >= 0 && e.key <= 9) appendNumber(e.key);
+  if (e.key === "=" || e.key === "Enter") evaluateKey();
+  if (e.key === "Escape") allClear();
+  if (e.key === "Backspace") deleteNumber();
+  if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/")
+    operateKey(e.key);
+}
+
 function resetIcons() {
   plusIcon.style.setProperty("--opacity-level", 0.2);
   minusIcon.style.setProperty("--opacity-level", 0.2);
@@ -64,6 +79,20 @@ function lightUpIcon(operator) {
   }
 }
 
+function operateKey(operatorKey) {
+  if (displayNumber.innerHTML === "0.") {
+    displayError();
+  } else if (canChangeOperator) {
+    operator = operatorKey;
+    lightUpIcon(operator);
+  } else {
+    calculate();
+    operator = operatorKey;
+    lightUpIcon(operator);
+    canChangeOperator = true;
+  }
+}
+
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
     if (displayNumber.innerHTML === "0.") {
@@ -80,7 +109,7 @@ operatorBtns.forEach((operatorBtn) => {
   });
 });
 
-equalBtn.addEventListener("click", () => {
+function evaluateKey() {
   if (operator === "") {
     displayError();
   } else {
@@ -88,6 +117,10 @@ equalBtn.addEventListener("click", () => {
     operator = "";
     resetIcons();
   }
+}
+
+equalBtn.addEventListener("click", () => {
+  evaluateKey();
 });
 
 function calculate() {
@@ -104,6 +137,7 @@ function calculate() {
         )
       );
     operand = result;
+    debugger;
     displayNumber.innerHTML = result;
     if (result % 1 === 0) {
       displayNumber.innerHTML += ".";
@@ -116,15 +150,17 @@ function roundResult(number) {
   return Math.round(number * 1000) / 1000;
 }
 
-allClearBtn.addEventListener("click", () => {
+function allClear() {
   resetCalculator();
   resetIcons();
   operand = "0";
   result = "0";
   operator = "";
-});
+}
 
-deleteBtn.addEventListener("click", () => {
+allClearBtn.addEventListener("click", allClear);
+
+function deleteNumber() {
   if (
     decimalBtn.value === "true" &&
     !(
@@ -174,9 +210,11 @@ deleteBtn.addEventListener("click", () => {
   if (numDigits > 0) {
     numDigits--;
   }
-});
+}
 
-plusMinusBtn.addEventListener("click", () => {
+deleteBtn.addEventListener("click", deleteNumber);
+
+function plusMinus() {
   if (plusMinusBtn.value === "true") {
     displayNumber.innerHTML =
       "-" + displayNumber.innerHTML.slice(0, displayNumber.innerHTML.length);
@@ -190,9 +228,11 @@ plusMinusBtn.addEventListener("click", () => {
     numDigits--;
     plusMinusBtn.value = "true";
   }
-});
+}
 
-percentBtn.addEventListener("click", () => {
+plusMinusBtn.addEventListener("click", plusMinus);
+
+function percent() {
   if (
     displayNumber.innerHTML.slice(
       displayNumber.innerHTML.length - 1,
@@ -236,7 +276,36 @@ percentBtn.addEventListener("click", () => {
       resetCalculator();
     }, 500);
   }
-});
+}
+
+percentBtn.addEventListener("click", percent);
+
+function appendNumber(number) {
+  if (isOperating) {
+    resetCalculator();
+    displayNumber.innerHTML = number + ".";
+    isOperating = false;
+    plusMinusBtn.value = "true";
+    canChangeOperator = false;
+  }
+  if (displayNumber.innerHTML === "0") {
+    displayNumber.innerHTML = "";
+  }
+  1;
+  if (numDigits < 13 && !isOperating) {
+    displayNumber.innerHTML = displayNumber.innerHTML.replaceAt(0, number);
+    numDigits++;
+  }
+}
+
+function appendDecimal() {
+  if (numDigits < 13) {
+    if (decimalBtn.value === "true") {
+      decimalBtn.value = "false";
+      numDigits++;
+    }
+  }
+}
 
 numberBtns.forEach((numberBtns) => {
   numberBtns.addEventListener("click", () => {
@@ -260,12 +329,7 @@ numberBtns.forEach((numberBtns) => {
   });
 
   decimalBtn.addEventListener("click", () => {
-    if (numDigits < 13) {
-      if (decimalBtn.value === "true") {
-        decimalBtn.value = "false";
-        numDigits++;
-      }
-    }
+    appendDecimal();
   });
 });
 
@@ -326,3 +390,5 @@ function operate(operator, num1, num2) {
       break;
   }
 }
+
+//Future: make code more efficient
